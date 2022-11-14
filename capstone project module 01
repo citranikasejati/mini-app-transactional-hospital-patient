@@ -1,0 +1,473 @@
+from os import system
+system('clear')
+
+
+## MINI APLIKASI TRANSAKSI DATA PASIEN RUMAH SAKIT
+
+
+## ===================================================================================================================================
+
+
+# Mendefinisikan data pasien awal dalam list of dictionary
+data_pasien = [
+    {
+        'NIK': 1234567891234567,
+        'Nama': 'Citranika Sejati',
+        'Usia': 25,
+        'Alamat': 'Sleman'
+    },
+    {
+        'NIK': 1234567898765432,
+        'Nama': 'Sejati Citranika',
+        'Usia': 24,
+        'Alamat': 'Bantul'
+    },
+        {
+        'NIK': 1234567890987654,
+        'Nama': 'Nika Citra Sejati',
+        'Usia': 23,
+        'Alamat': 'Yogyakarta'
+    },
+]
+
+
+## Function untuk menampilkan daftar menu yang ada pada aplikasi
+def daftar_menu():
+    while True:
+        pilih_menu = input('''
+            RUMAH SAKIT CITRA 
+
+            Daftar Menu:
+            1. Menampilkan data pasien
+            2. Menambah data pasien
+            3. Menghapus data pasien
+            4. Mengupdate data pasien
+            5. Menghitung biaya periksa
+            6. Keluar aplikasi
+
+            Silakan pilih nomor menu: ''')
+
+        print()
+        if pilih_menu == '1':
+            menu_menampilkan()
+        elif pilih_menu == '2':
+            menambah_data()
+        elif pilih_menu == '3':
+            menghapus_data()
+        elif pilih_menu == '4':
+            mengupdate_data()
+        elif pilih_menu == '5':
+            menghitung_biaya()
+        elif pilih_menu == '6':
+            break                   
+
+
+## ===================================================================================================================================
+
+
+## Function untuk menampilkan daftar sub-menu pada menu menampilkan data pasien
+def menu_menampilkan():
+    while True:
+        pilih_menu = input('''
+        ==================== MENAMPILKAN DATA PASIEN ====================
+
+        Daftar Sub-Menu:
+        1. Menampilkan seluruh data pasien
+        2. Mencari data seorang pasien
+        3. Kembali ke daftar menu
+
+        Silakan pilih nomor sub-menu: ''')
+
+        print()
+        if pilih_menu == '1':
+            menampilkan_data()
+        elif pilih_menu == '2':
+            mencari_data()
+        elif pilih_menu == '3':
+            daftar_menu()
+
+
+# Function untuk menampilkan seluruh data pasien
+def menampilkan_data():
+    print('----------------------------- Data Pasien -----------------------------')
+    print('Nomor \t| NIK \t\t\t| Nama \t\t\t| Usia \t| Alamat')
+
+    for index, item in enumerate(data_pasien):
+        print(f"{index+1} \t| {item['NIK']} \t| {item['Nama']} \t| {item['Usia']} \t| {item['Alamat']}")
+
+
+## Function untuk mencari data seorang pasien
+def mencari_data():
+    check=True
+    while check:
+        cari_nik = input('Masukkan 16 digit NIK pasien yang ingin dicari datanya: ')
+        for x in range(len(data_pasien)):
+            if int(cari_nik) == data_pasien[x]['NIK']:
+                for key in data_pasien[x]:
+                    print(f'{key}\t: {data_pasien[x][key]}')
+                check=False
+                break
+            elif cari_nik.isdigit() == False or len(cari_nik) != 16 or int(cari_nik) == data_pasien[x]['NIK']:
+                print('NIK tidak sesuai. Masukkan NIK yang sesuai.')
+                break
+
+
+## ===================================================================================================================================
+
+
+# Function untuk menambah data pasien baru
+def menambah_data():
+    print('==================== MENAMBAHKAN DATA PASIEN ====================')
+    while True:
+        nik_pasien = input('Masukkan 16 digit NIK pasien: ')
+        if nik_pasien.isdigit() == False or len(str(nik_pasien)) != 16:
+            print('NIK tidak sesuai. Masukkan NIK yang sesuai.')
+            continue
+        else:
+            nik_pasien = int(nik_pasien)
+            print('NIK:', nik_pasien)
+
+        while True:
+            nama_pasien = input('Masukkan nama pasien (alfabet dan spasi): ').title()
+            if all (x.isalpha() or x.isspace() for x in nama_pasien):
+                nama_pasien = str(nama_pasien)
+                print('Nama:', nama_pasien)
+            else:
+                print('Nama tidak sesuai. Masukkan nama yang sesuai.')
+                continue
+
+            while True:
+                usia_pasien = input('Masukkan usia pasien (tahun): ')
+                if usia_pasien.isdigit() == False:
+                    print('Usia tidak sesuai. Masukkan usia yang sesuai.')
+                    continue
+                else:
+                    usia_pasien = int(usia_pasien)
+                    print('Usia:', usia_pasien)
+
+                while True:
+                    alamat_pasien = input('Masukkan alamat pasien (kabupaten atau kota): ').title()
+                    if all (x.isalpha() or x.isspace() for x in alamat_pasien):
+                        alamat_pasien = str(alamat_pasien)
+                        print('Alamat:', alamat_pasien)
+                    else:
+                        print('Alamat tidak sesuai. Masukkan alamat yang sesuai.')
+                        continue
+                    break
+                break
+            break
+        break
+        
+    konfirmasi_tambah()
+
+    for item in data_pasien:
+        if (item['NIK'] == nik_pasien):
+            print('Data pasien sudah ada.')
+        else:
+            data_pasien.append({
+                'NIK': nik_pasien,
+                'Nama': nama_pasien,
+                'Usia': usia_pasien,
+                'Alamat': alamat_pasien
+            })
+            menampilkan_data()
+            break
+        
+    konfirmasi_tambah_lain()
+
+
+# Function untuk mengkonfirmasi tambah data pasien
+def konfirmasi_tambah():
+    while True:
+        user_input = input('\nKetik Y jika Anda yakin untuk menambahkan data pasien pada daftar, N untuk membatalkan: ').upper()            
+        if user_input == 'Y':
+            break
+        elif user_input == 'N':
+            konfirmasi_tambah_lain()
+            break
+        else:
+            print('Input tidak sesuai. Silakan ketik Y atau N untuk konfirmasi')
+            user_input
+
+
+# Function untuk mengkonfirmasi tambah data pasien lain
+def konfirmasi_tambah_lain():
+    while True:
+        user_input = input('\nKetik Y jika Anda ingin menambahkan data pasien yang lain, N untuk kembali ke daftar menu: ').upper()            
+        if user_input == 'Y':
+            menambah_data()
+            break
+        elif user_input == 'N':
+            daftar_menu()
+            break
+        else:
+            print('Input tidak sesuai. Silakan ketik Y atau N untuk konfirmasi')
+            user_input
+
+
+## ===================================================================================================================================
+
+
+# Function untuk menghapus data pasien dari daftar
+def menghapus_data():
+    menampilkan_data() # menampilkan daftar pasien yang ada sebelum menghapus
+    print('==================== MENGHAPUS DATA PASIEN ====================')
+
+    while True:
+        nomor_pasien = input('Masukkan nomor pasien yang ingin dihapus: ')
+        if nomor_pasien.isdigit() == False:
+            print('Nomor tidak sesuai. Masukkan nomor yang sesuai.')
+            continue
+        else:
+            nomor_pasien = int(nomor_pasien)
+            if nomor_pasien not in range(len(data_pasien)+1):
+                print(f'Tidak ada nomor {nomor_pasien} pada data. Silakan masukkan nomor yang sesuai.')
+            else:
+                konfirmasi_hapus()
+                break
+
+    del data_pasien[nomor_pasien-1]
+    menampilkan_data() # menampilkan kembali daftar pasien setelah menghapus salah satu item
+    konfirmasi_hapus_lain()
+
+
+# Function untuk mengkonfirmasi hapus data pasien
+def konfirmasi_hapus():
+    while True:
+        user_input = input('\nKetik Y jika Anda yakin untuk menghapus data pasien dari daftar, N untuk membatalkan: ').upper()
+        if user_input == 'Y':
+            break
+        elif user_input == 'N':
+            konfirmasi_hapus_lain()
+        else:
+            print('Input tidak sesuai. Silakan ketik Y atau N untuk konfirmasi')
+            user_input
+
+
+# Function untuk mengkonfirmasi hapus data pasien lain
+def konfirmasi_hapus_lain():
+    while True:
+        user_input = input('\nKetik Y jika Anda ingin menghapus data pasien yang lain, N untuk kembali ke daftar menu: ').upper()            
+        if user_input == 'Y':
+            menghapus_data()
+        elif user_input == 'N':
+            menampilkan_data() # menampilkan kembali daftar pasien setelah menghapus salah satu item
+            daftar_menu()
+        else:
+            print('Input tidak sesuai. Silakan ketik Y atau N untuk konfirmasi')
+            user_input
+
+
+## ===================================================================================================================================
+
+
+## Function untuk mengupdate atau mengubah data pasien
+def mengupdate_data():
+    menampilkan_data() # menampilkan daftar pasien yang ada sebelum diupdate
+    print('==================== MENGUPDATE DATA PASIEN ====================')
+
+    while True:
+        global nomor_update
+        nomor_update = input('Masukkan nomor pasien yang ingin diupdate datanya: ')
+        if nomor_update.isdigit() == False:
+            print('Nomor tidak sesuai. Masukkan nomor yang sesuai.')
+            continue
+        else:
+            nomor_update = int(nomor_update)
+            if nomor_update not in range(len(data_pasien)+1):
+                print(f'Tidak ada nomor {nomor_update} pada data. Silakan masukkan nomor yang sesuai.')
+                continue
+            else:
+                menu_mengupdate()
+            break
+
+
+## Function untuk menampilkan daftar sub-menu pada menu mengupdate data pasien
+def menu_mengupdate():
+    while True:
+        pilih_menu = input('''
+
+        Pilih data yang ingin diupdate:
+        1. NIK
+        2. Nama
+        3. Usia
+        4. Alamat
+        5. Selesai update
+
+        Silakan pilih nomor: ''')
+
+        print()
+        if pilih_menu == '1':
+            update_nik()
+        elif pilih_menu == '2':
+            update_nama()
+        elif pilih_menu == '3':
+            update_usia()
+        elif pilih_menu == '4':
+            update_alamat()
+        elif pilih_menu == '5':
+            menampilkan_data()
+            daftar_menu()
+        break
+
+
+## Function untuk mengupdate data NIK pasien
+def update_nik():
+    while True:
+        update_nik = input('Masukkan 16 digit NIK pasien: ')
+        if update_nik.isdigit() == False or len(str(update_nik)) != 16:
+            print('NIK tidak sesuai. Masukkan NIK yang sesuai')
+            continue
+        else:
+            data_pasien[nomor_update-1]['NIK'] = int(update_nik)
+            print('NIK:', update_nik)
+            break
+    menu_mengupdate()
+
+
+## Function untuk mengupdate data nama pasien
+def update_nama():
+    while True:
+        update_nama = input('Masukkan nama pasien (alfabet dan spasi): ').title()
+        if all (x.isalpha() or x.isspace() for x in update_nama):
+            data_pasien[nomor_update-1]['Nama'] = str(update_nama)
+            print('Nama:', update_nama)
+            break
+        else:
+            print('Nama tidak sesuai. Masukkan nama yang sesuai')
+            continue
+    menu_mengupdate()
+
+
+## Function untuk mengupdate data usia pasien
+def update_usia():
+    while True:
+        update_usia = input('Masukkan usia pasien (tahun): ')
+        if update_usia.isdigit() == False:
+            print('Usia tidak sesuai. Masukkan usia yang sesuai')
+            continue
+        else:
+            data_pasien[nomor_update-1]['Usia'] = int(update_usia)
+            print('Usia:', update_usia)
+            break
+    menu_mengupdate()
+
+
+## Function untuk mengupdate data alamat pasien
+def update_alamat():
+    while True:
+        update_alamat = input('Masukkan alamat pasien (kabupaten/kota): ').title()
+        if all (x.isalpha() or x.isspace() for x in update_alamat):
+            data_pasien[nomor_update-1]['Alamat'] = str(update_alamat)
+            print('Alamat:', update_alamat)
+            break
+        else:
+            print('Alamat tidak sesuai. Masukkan alamat yang sesuai')
+            continue
+    menu_mengupdate()
+
+
+## ===================================================================================================================================
+
+
+# Function untuk menghitung biaya pasien
+def menghitung_biaya():
+    menampilkan_data()
+    print('==================== MENGHITUNG BIAYA PASIEN ====================')
+
+    while True:
+        nomor_pasien = input('Masukkan nomor pasien yang ingin dihitung biayanya: ')
+        if nomor_pasien.isdigit() == False:
+            print('Nomor tidak sesuai. Masukkan nomor yang sesuai')
+            continue
+        else:
+            nomor_pasien = int(nomor_pasien)
+            if nomor_pasien not in range(len(data_pasien)+1):
+                print(f'Tidak ada nomor {nomor_pasien} pada data. Silakan masukkan nomor yang sesuai.')
+                continue
+            else:
+                periksa_dokter = input('\nKetik Y jika pasien diperiksa oleh dokter, N jika tidak: ').upper()
+                total_biaya = 5000 
+                while True:
+                    if periksa_dokter == 'Y':
+                        total_biaya += 30000 
+                        jumlah_obat = int(input('Jumlah macam obat yang diresepkan oleh dokter: '))
+                        total_biaya += jumlah_obat * 20000 
+                        break
+                    elif periksa_dokter == 'N':
+                        print('Pasien tidak dikenakan biaya dan tidak diperbolehkan membeli obat tanpa resep dokter.')
+                        konfirmasi_hitung_lain()
+                        break
+                    else:
+                        periksa_dokter
+        break
+
+    uraian_biaya = [
+        {
+            'uraian': 'Pendaftaran administrasi',
+            'jumlah': 1,
+            'harga': 5000,
+            'total harga': 5000
+        },
+        {
+            'uraian': 'Periksa dengan dokter',
+            'jumlah': 1,
+            'harga': 30000,
+            'total harga': 30000
+        },
+        {
+            'uraian': 'Obat \t\t\t',
+            'jumlah': jumlah_obat,
+            'harga': 20000,
+            'total harga': jumlah_obat * 20000
+        },
+        ]
+
+    print('------------------------------------ Daftar Biaya ------------------------------------')
+    print('Nomor \t| Uraian  \t\t\t| Jumlah \t| Harga \t| Total Harga')
+
+    for index, item in enumerate(uraian_biaya):
+        print(f"{index+1} \t| {item['uraian']} \t| {item['jumlah']} \t\t| {item['harga']}  \t| {item['total harga']}")
+    print(f'TOTAL BIAYA \t\t\t\t\t\t\t\t  {total_biaya}\n')
+
+    while True:
+        print(f'Total biaya yang harus dibayar pasien = {total_biaya}')
+        if total_biaya != 0:
+            jumlah_uang = int(input('Masukkan jumlah uang pasien: '))
+            
+            if(jumlah_uang > total_biaya):
+                kembali = jumlah_uang - total_biaya
+                print(f'Uang kembalian pasien: {kembali}')
+                break
+            
+            elif(jumlah_uang == total_biaya):
+                print('Uang pasien pas.')
+                break
+            
+            else:
+                kekurangan = total_biaya - jumlah_uang
+                print(f'Uang pasien kurang sebesar: {kekurangan}')
+
+        else:
+            print(f'Terima kasih semoga lekas sembuh.')
+            break
+    
+    konfirmasi_hitung_lain()
+
+
+# Function untuk mengkonfirmasi menghitung biaya pasien yang lain
+def konfirmasi_hitung_lain():
+    while True:
+        user_input = input('\nKetik Y jika Anda ingin menghitung biaya pasien yang lain, N untuk kembali ke daftar menu: ').upper()            
+        if user_input == 'Y':
+            menghitung_biaya()
+            break
+        elif user_input == 'N':
+            daftar_menu()
+        else:
+            print('Input tidak sesuai. Silakan ketik Y atau N untuk konfirmasi')
+            continue
+        break
+
+
+daftar_menu()
